@@ -15,12 +15,15 @@ app.get("/contacts", (req, res) => {
   })
 })
 
-// app.post("/contacts", (req, res) => {
+app.post("/contacts", (req, res) => {
+  const contact = req.body
+  contact.id = contacts.length + 1
+  contacts.push(contact)
 
-//   contacts.push(req.body)
+  console.log(contacts)
 
-//   res.json({contact: req.body})
-// })
+  res.json({contact})
+})
 
 const port = 3030
 app.listen(port, () => {
