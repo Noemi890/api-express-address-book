@@ -56,6 +56,18 @@ app.post("/contacts", (req, res) => {
   res.json({contact})
 })
 
+app.post("/contacts/:id/meetings", (req, res) => {
+  const id = req.params.id
+  const newMeeting = req.body
+
+  newMeeting.id = meetings.length
+  newMeeting.contactId = id
+
+  meetings.push(newMeeting)
+
+  res.json({meeting: newMeeting})
+})
+
 app.delete("/contacts/:id", (req, res) => {
   const id = Number(req.params.id)
   const contact = contacts.find(contact => contact.id === id)
