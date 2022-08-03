@@ -15,6 +15,19 @@ app.get("/contacts", (req, res) => {
   })
 })
 
+app.get("/contacts/:id", (req, res) => {
+
+  const id = Number(req.params.id)
+
+  // console.log(id)
+
+  const contact = contacts.find(contact => contact.id === id)
+
+  // console.log(contact)
+  
+  res.json({contact})
+})
+
 app.post("/contacts", (req, res) => {
   const contact = req.body
   contact.id = contacts.length + 1
