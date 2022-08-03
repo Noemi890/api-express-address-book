@@ -38,6 +38,18 @@ app.post("/contacts", (req, res) => {
   res.json({contact})
 })
 
+app.delete("/contacts/:id", (req, res) => {
+  const id = Number(req.params.id)
+  const contact = contacts.find(contact => contact.id === id)
+  const index = contacts.indexOf(contact)
+
+  const deletedContact = contacts.splice(index, 1)
+
+  res.json({contact: deletedContact})
+})
+
+
+
 const port = 3030
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`)
