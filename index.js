@@ -2,6 +2,7 @@ const express = require("express")
 const morgan = require("morgan")
 const cors = require("cors")
 const contacts = require("./contacts.js")
+const meetings = require("./meetings.js")
 
 const app = express()
 
@@ -19,13 +20,30 @@ app.get("/contacts/:id", (req, res) => {
 
   const id = Number(req.params.id)
 
-  // console.log(id)
-
   const contact = contacts.find(contact => contact.id === id)
-
-  // console.log(contact)
   
   res.json({contact})
+})
+
+app.get("/contacts/:id/meetings", (req, res) => {
+  const id = req.params.id
+
+  const specificMeetings = meetings.filter(meet => meet.contactId === id)
+
+  res.json({meetings: specificMeetings})
+})
+
+app.put("/contacts/:id", (req, res) => {
+  const modifiedContact = req.body
+  const id = Number(req.params.id)
+  modifiedContact.id = id
+
+  const contact = contacts.find(contact => contact.id === id)
+  const index = contacts.indexOf(contact)
+
+  contacts.splice(index, 1, modifiedContact)
+
+  res.json({contact: modifiedContact})
 })
 
 app.post("/contacts", (req, res) => {
