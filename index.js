@@ -60,10 +60,11 @@ app.post("/contacts/:id/meetings", (req, res) => {
   const id = req.params.id
   const newMeeting = req.body
 
-  newMeeting.id = meetings.length
+  newMeeting.id = meetings.length +1
   newMeeting.contactId = id
 
   meetings.push(newMeeting)
+  console.log(meetings)
 
   res.json({meeting: newMeeting})
 })
