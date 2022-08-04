@@ -101,6 +101,8 @@ app.post("/contacts/:id/meetings", (req, res) => {
   res.json({meeting: newMeeting})
 })
 
+// For this extension, it seems a little bit pointless to post a meeting directly into the meetings database. 
+// In this case you won't be able to connect this meeting with a user, hence it is going to stay in the database forever
 app.post("/meetings", (req, res) => {
   const newMeeting = req.body
   newMeeting.id = meetings.length+1
