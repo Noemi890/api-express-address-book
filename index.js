@@ -11,8 +11,16 @@ app.use(cors())
 app.use(express.json())
 
 app.get("/contacts", (req, res) => {
+
+  const contactsWithMeetings = contacts.map(contact => {
+    return {
+      ...contact,
+      meeting: meetings.filter(meeting => meeting.contactId === contact.id)
+    }
+  })
+
   res.json({
-    contacts
+    contacts: contactsWithMeetings
   })
 })
 
@@ -26,11 +34,11 @@ app.get("/contacts/:id", (req, res) => {
 })
 
 app.get("/contacts/:id/meetings", (req, res) => {
-  const id = req.params.id
+  const id = Number(req.params.id)
 
-  const specificMeetings = meetings.filter(meet => meet.contactId === id)
+  const filteredMeetings = meetings.filter(meet => meet.contactId === id)
 
-  res.json({meetings: specificMeetings})
+  res.json({meetings: filteredMeetings})
 })
 
 app.put("/contacts/:id", (req, res) => {
@@ -43,7 +51,27 @@ app.put("/contacts/:id", (req, res) => {
 
   contacts.splice(index, 1, modifiedContact)
 
-  res.json({contact: modifiedContact})
+  res.status(201).json({
+    contact: {...modifiedContact}, 
+    meetings: meetings.filter(meeting => meeting.contactId === modifiedContact.id)
+  }) // modified after review
+})
+
+app.put("/contacts/:id/meetings/:meetingId", (req, res) => {
+  const idMeeting = Number(req.params.meetingId)
+  const newMeeting = req.body
+  console.log(idMeeting, newMeeting)
+
+  const foundMeeting = meetings.find(m => m.id === idMeeting)
+  console.log(foundMeeting)
+  const index = meetings.indexOf(foundMeeting)
+
+  newMeeting.contactId = foundMeeting.contactId
+  newMeeting.id = foundMeeting.id
+
+  meetings.splice(index, 1, newMeeting)
+
+  res.status(201).json({meetings: {...newMeeting}})
 })
 
 app.post("/contacts", (req, res) => {
@@ -53,11 +81,11 @@ app.post("/contacts", (req, res) => {
 
   console.log(contacts)
 
-  res.json({contact})
+  res.status(201).json({contact, meetings:[]}) //modified after review
 })
 
 app.post("/contacts/:id/meetings", (req, res) => {
-  const id = req.params.id
+  const id = Number(req.params.id)
   const newMeeting = req.body
 
   newMeeting.id = meetings.length +1
@@ -75,8 +103,13 @@ app.delete("/contacts/:id", (req, res) => {
   const index = contacts.indexOf(contact)
 
   const deletedContact = contacts.splice(index, 1)
+  const contactMeetings = meetings.filter(meeting => meeting.contactId === contact.id)
 
-  res.json({contact: deletedContact})
+
+  res.json({
+    contact: deletedContact,
+    meetings: contactMeetings // modified after review
+  })
 })
 
 
@@ -85,3 +118,4 @@ const port = 3030
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`)
 })
+
