@@ -101,6 +101,15 @@ app.post("/contacts/:id/meetings", (req, res) => {
   res.json({meeting: newMeeting})
 })
 
+app.post("/meetings", (req, res) => {
+  const newMeeting = req.body
+  newMeeting.id = meetings.length+1
+
+  meetings.push(newMeeting)
+
+  res.json({meeting: newMeeting})
+})
+
 app.delete("/contacts/:id", (req, res) => {
   const id = Number(req.params.id)
   const contact = contacts.find(contact => contact.id === id)
