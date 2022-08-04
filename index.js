@@ -41,6 +41,10 @@ app.get("/contacts/:id/meetings", (req, res) => {
   res.json({meetings: filteredMeetings})
 })
 
+app.get("/meetings", (req, res) => {
+  res.json(meetings)
+})
+
 app.put("/contacts/:id", (req, res) => {
   const modifiedContact = req.body
   const id = Number(req.params.id)
